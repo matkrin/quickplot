@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { ChangeEvent, useCallback, useState } from 'react'
 import './App.css'
+import { AesStaib } from './vamas';
+import { useDropzone } from "react-dropzone"
+
+type DropzoneProps = {
+    children: JSX.Element
+}
+
+function FullWindowDropzone(props: DropzoneProps) {
+    const onDrop = useCallback((acceptedFiles: Array<File>) => {
+        console.log(acceptedFiles)
+    }, [])
+
+    const { getRootProps, getInputProps, isDragActive, open } = useDropzone({ onDrop, noClick: true });
+
+    return (
+        <div id="dropzone" style={{ width: "100vw", height: "100vh" }} {...getRootProps()} >
+            <input {...getInputProps()} />
+            {isDragActive ? <p>Drop the files here...</p> : <p> Drag file or click</p>}
+            <button onClick={open}>TEST</button>
+            {props.children}
+        </div >
+    )
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+    async function handleInput(event: ChangeEvent<HTMLInputElement>) {
+        if (event.target.files) {
+            const fileContent = await event.target.files[0].text();
+            const aes = new AesStaib(fileContent);
+            console.log(aes)
+        }
+    }
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    return (
+        <FullWindowDropzone>
+            <div className="App">
+                {/* <div> */}
+                {/*     <label htmlFor="load-file">Load a file:</label> */}
+                {/*     <input type="file" id="load-file" onChange={(e) => handleInput(e)} /> */}
+                {/* </div> */}
+                <p>Hello</p>
+                <button onClick={() => console.log("button click")}>TEST</button>
+            </div>
+        </ FullWindowDropzone>
+    )
 }
 
 export default App
