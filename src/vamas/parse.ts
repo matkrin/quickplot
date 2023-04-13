@@ -114,16 +114,16 @@ export function parseVamas(file: string): VamasParseResult {
 
         b["numHoursAdvanceGmt"] = include[6]
             ? parseFloat(lines[cursor++])
-            : fb["num_hours_advance_gmt"];
+            : fb["numHoursAdvanceGmt"];
 
         if (include[7]) {
             b["numLinesBlockComment"] = parseInt(lines[cursor++]);
-            let block_comments = [];
+            let blockComments = [];
             for (let i = 0; i < b["numLinesBlockComment"]; ++i) {
-                block_comments.push(lines[cursor++].trim());
+                blockComments.push(lines[cursor++].trim());
             }
 
-            b["blockComment"] = block_comments.join("\n");
+            b["blockComment"] = blockComments.join("\n");
         } else {
             b["numLinesBlockComment"] = fb["numLinesBlockComment"];
             b["blockComment"] = fb["blockComment"];
@@ -178,13 +178,13 @@ export function parseVamas(file: string): VamasParseResult {
         b["analysisSourceCharacteristicEnergy"] = include[13]
             ? parseFloat(lines[cursor++])
             : fb["analysisSourceCharacteristicEnergy"];
-        b["analysis_source_strength"] = include[14]
+        b["analysisSourceStrength"] = include[14]
             ? parseFloat(lines[cursor++])
             : fb["analysisSourceStrength"];
         b["analysisSourceBeamWidthX"] = include[15]
             ? parseFloat(lines[cursor++])
             : fb["analysisSourceBeamWidthx"];
-        b["analysis_source_beam_width_y"] = include[15]
+        b["analysisSourceBeamWidthY"] = include[15]
             ? parseFloat(lines[cursor++])
             : fb["analysisSourceBeamWidthY"];
 
@@ -204,12 +204,12 @@ export function parseVamas(file: string): VamasParseResult {
         if (["MAPSV", "MAPSVDP", "SEM"].includes(h["experimentMode"])) {
             if (include[17]) {
                 b["linescanCoordinates"] = {
-                    first_linescan_start_x: parseInt(lines[cursor++]),
-                    first_linescan_start_y: parseInt(lines[cursor++]),
-                    first_linescan_finish_x: parseInt(lines[cursor++]),
-                    first_linescan_finish_y: parseInt(lines[cursor++]),
-                    last_linescan_finish_x: parseInt(lines[cursor++]),
-                    last_linescan_finish_y: parseInt(lines[cursor++]),
+                    firstLinescanStartX: parseInt(lines[cursor++]),
+                    firstLinescanStartY: parseInt(lines[cursor++]),
+                    firstLinescanFinishX: parseInt(lines[cursor++]),
+                    firstLinescanFinishY: parseInt(lines[cursor++]),
+                    lastLinescanFinishX: parseInt(lines[cursor++]),
+                    lastLinescanFinishY: parseInt(lines[cursor++]),
                 };
             } else {
                 b["linescanCoordinates"] = fb["linescanCoordinates"];
@@ -268,7 +268,7 @@ export function parseVamas(file: string): VamasParseResult {
         b["transitionOrChargeStateLabel"] = include[29]
             ? lines[cursor++].trim()
             : fb["transitionOrChargeStateLabel"];
-        b["charge_detected_particle"] = include[29]
+        b["chargeDetectedParticle"] = include[29]
             ? parseInt(lines[cursor++])
             : fb["chargeDetectedParticle"];
 
@@ -290,7 +290,7 @@ export function parseVamas(file: string): VamasParseResult {
                 b["correspondingVariables"].push({
                     label: lines[cursor++].trim(),
                     unit: lines[cursor++].trim(),
-                    y_values: [],
+                    yValues: [],
                 });
             }
         } else {
@@ -326,10 +326,10 @@ export function parseVamas(file: string): VamasParseResult {
             if (include[36]) {
                 b["sputteringSource"] = {
                     energy: parseFloat(lines[cursor++]),
-                    beam_current: parseFloat(lines[cursor++]),
-                    width_x: parseFloat(lines[cursor++]),
-                    width_y: parseFloat(lines[cursor++]),
-                    polar_incidence_angle: parseFloat(lines[cursor++]),
+                    beamCurrent: parseFloat(lines[cursor++]),
+                    widthX: parseFloat(lines[cursor++]),
+                    widthY: parseFloat(lines[cursor++]),
+                    polarIncidenceAngle: parseFloat(lines[cursor++]),
                     azimuth: parseFloat(lines[cursor++]),
                     mode: lines[cursor++].trim(),
                 };
@@ -371,9 +371,9 @@ export function parseVamas(file: string): VamasParseResult {
 
         b["numYValues"] = parseInt(lines[cursor++]);
 
-        for (let corres_var of b["correspondingVariables"]) {
-            corres_var.y_min = parseFloat(lines[cursor++]);
-            corres_var.y_max = parseFloat(lines[cursor++]);
+        for (let corresVar of b["correspondingVariables"]) {
+            corresVar.yMin = parseFloat(lines[cursor++]);
+            corresVar.yMax = parseFloat(lines[cursor++]);
         }
 
         /* for _ in range( parseInt(b["num_y_values"] / len(b["corresponding_variables"]))): */
@@ -384,8 +384,8 @@ export function parseVamas(file: string): VamasParseResult {
             b["correspondingVariables"].length;
             ++i
         ) {
-            for (let corres_var of b["correspondingVariables"]) {
-                corres_var.y_values.push(parseFloat(lines[cursor++]));
+            for (let corresVar of b["correspondingVariables"]) {
+                corresVar.yValues.push(parseFloat(lines[cursor++]));
             }
         }
 
