@@ -1,7 +1,6 @@
 import { VamasBlock, VamasHeader } from "./types";
 import { parseVamas } from "./parse";
-import * as _ from "lodash"
-
+import * as _ from "lodash";
 
 export class Vamas {
     header: VamasHeader;
@@ -13,12 +12,11 @@ export class Vamas {
 }
 
 export class AesStaib extends Vamas {
-    xData: Array<number>
-    yData: Array<number>
-    eStart: number
-    eStop: number
-    eStep: number
-
+    xData: Array<number>;
+    yData: Array<number>;
+    eStart: number;
+    eStop: number;
+    eStep: number;
 
     constructor(file: string) {
         super(file);

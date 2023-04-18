@@ -1,6 +1,5 @@
 import { VamasBlock, VamasHeader } from "./types";
 
-
 type VamasParseResult = {
     header: VamasHeader;
     blocks: Array<VamasBlock>;
@@ -16,7 +15,7 @@ export function parseVamas(file: string): VamasParseResult {
 
     if (
         h.formatIdentifier !== "VAMAS Surface Chemical Analysis Standard " +
-        "Data Transfer Format 1988 May 4"
+                "Data Transfer Format 1988 May 4"
     ) {
         throw Error("The file does not contain the correct vamas identifier");
     }
@@ -380,8 +379,8 @@ export function parseVamas(file: string): VamasParseResult {
         for (
             let i = 0;
             i <
-            parseInt(b["numYValues"]) /
-            b["correspondingVariables"].length;
+                parseInt(b["numYValues"]) /
+                    b["correspondingVariables"].length;
             ++i
         ) {
             for (let corresVar of b["correspondingVariables"]) {
