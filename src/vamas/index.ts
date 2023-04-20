@@ -12,11 +12,13 @@ export class Vamas {
 }
 
 export class AesStaib extends Vamas {
+    filename: string;
     xData: Array<number>;
     yData: Array<number>;
     eStart: number;
     eStop: number;
     eStep: number;
+    datetime: Date;
 
     constructor(file: string) {
         super(file);
@@ -26,5 +28,11 @@ export class AesStaib extends Vamas {
         this.eStop = (data.xStep * data.numYValues + data.xStart) - data.xStep;
         this.eStep = data.xStep;
         this.xData = _.range(this.eStart, this.eStop + this.eStep, this.eStep);
+        this.datetime = new Date(data.year, data.month - 1, data.day, data.hour, data.minute, data.second);
+        this.filename = "";
+    }
+
+    setFilename(filename: string) {
+        this.filename = filename;
     }
 }
