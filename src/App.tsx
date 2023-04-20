@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { useCallback } from "react";
 import "./App.css";
 import { AesStaib } from "./vamas";
 import { useDropzone } from "react-dropzone";
@@ -15,11 +15,12 @@ function FullWindowDropzone(props: DropzoneProps) {
     const setAesFiles = useStore((state) => state.setAesFiles);
 
     const onDrop = useCallback(async (acceptedFiles: Array<File>) => {
-        /* console.log(acceptedFiles) */
         const fileContents = await Promise.all(
             acceptedFiles.map((f) => f.text()),
         );
         const aesFiles = fileContents.map((fc) => new AesStaib(fc));
+        aesFiles.forEach((f, i) => f.setFilename(acceptedFiles[i].name.split(".")[0]))
+        console.log(aesFiles);
         setAesFiles(aesFiles);
     }, []);
 
@@ -36,8 +37,8 @@ function FullWindowDropzone(props: DropzoneProps) {
         >
             <input {...getInputProps()} />
             {isDragActive
-                ? <p>Drop the files here...</p>
-                : <p>Drag file or click</p>}
+                ? <p>Drop 'em</p>
+                : <p>Drag file(s) or folder click</p>}
             <button onClick={open}>Browse</button>
             {props.children}
         </div>
@@ -50,14 +51,14 @@ function AesPlot() {
     const layout: Partial<Layout> = {
         autosize: true,
         margin: {
-            l: 90,
+            l: 80,
             r: 30,
             t: 30,
             b: 70,
         },
         xaxis: {
             title: {
-                text: "x-Axis",
+                text: "E<sub>kin</sub> [eV]",
                 font: {
                     size: 18,
                 },
@@ -78,7 +79,7 @@ function AesPlot() {
         },
         yaxis: {
             title: {
-                text: "y-Axis even longer",
+                text: "dN / dE [arb. units]",
                 font: {
                     size: 18,
                 },
@@ -96,13 +97,21 @@ function AesPlot() {
                 /* family: "Courier", */
                 size: 14,
             },
+            zeroline: false,
         },
     };
     /* const data = [{ x: new Float64Array([1, 2, 3, 16]), y: [2, 6, 3, 12], mode: "lines" }]; */
-    const data = aesFiles.map((aes) => {
+    const data = aesFiles.map((aes, i) => {
+        let dash = "solid";
+        if (i > 9) dash = "dash"
         return {
             x: aes.xData,
             y: aes.yData,
+            mode: "lines",
+            name: aes.filename,
+            line: {
+                dash: dash,
+            }
         };
     });
 
