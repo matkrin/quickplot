@@ -11,6 +11,9 @@ export const useStore = create<Store>((set) => {
         aesFiles: [],
         setAesFiles: (newFiles) => {
             set((state) => {
+                newFiles.sort((a, b) => {
+                    return a.datetime < b.datetime ? -1 : 1;
+                });
                 return { aesFiles: [...state.aesFiles, ...newFiles] };
             });
         },
