@@ -5,16 +5,22 @@ import { useDropzone } from "react-dropzone";
 import Plot from "react-plotly.js";
 import { Layout } from "plotly.js";
 import { size } from "lodash";
+import { useStore } from "./store";
 
 type DropzoneProps = {
     children: JSX.Element;
 };
 
 function FullWindowDropzone(props: DropzoneProps) {
+    const setAesFiles = useStore((state) => state.setAesFiles);
+
     const onDrop = useCallback(async (acceptedFiles: Array<File>) => {
-        const fileContent = await acceptedFiles[0].text();
-        const aes = new AesStaib(fileContent);
-        console.log(aes);
+        /* console.log(acceptedFiles) */
+        const fileContents = await Promise.all(
+            acceptedFiles.map((f) => f.text()),
+        );
+        const aesFiles = fileContents.map((fc) => new AesStaib(fc));
+        setAesFiles(aesFiles);
     }, []);
 
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -39,6 +45,8 @@ function FullWindowDropzone(props: DropzoneProps) {
 }
 
 function AesPlot() {
+    const aesFiles = useStore((state) => state.aesFiles);
+
     const layout: Partial<Layout> = {
         autosize: true,
         margin: {
@@ -90,7 +98,13 @@ function AesPlot() {
             },
         },
     };
-    const data = [{ x: [1, 2, 3, 33], y: [2, 6, 3, 12], mode: "lines" }];
+    /* const data = [{ x: new Float64Array([1, 2, 3, 16]), y: [2, 6, 3, 12], mode: "lines" }]; */
+    const data = aesFiles.map((aes) => {
+        return {
+            x: aes.xData,
+            y: aes.yData,
+        };
+    });
 
     return (
         <Plot
@@ -109,11 +123,12 @@ function AesPlot() {
 }
 
 function App() {
+    const aesFiles = useStore((state) => state.aesFiles);
     return (
         <FullWindowDropzone>
             <div className="App">
                 <p>Hello</p>
-                <AesPlot />
+                {aesFiles.length > 0 && <AesPlot />}
             </div>
         </FullWindowDropzone>
     );
