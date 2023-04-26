@@ -19,7 +19,9 @@ function FullWindowDropzone(props: DropzoneProps) {
             acceptedFiles.map((f) => f.text()),
         );
         const aesFiles = fileContents.map((fc) => new AesStaib(fc));
-        aesFiles.forEach((f, i) => f.setFilename(acceptedFiles[i].name.split(".")[0]))
+        aesFiles.forEach((f, i) =>
+            f.setFilename(acceptedFiles[i].name.split(".")[0])
+        );
         console.log(aesFiles);
         setAesFiles(aesFiles);
     }, []);
@@ -103,7 +105,7 @@ function AesPlot() {
     /* const data = [{ x: new Float64Array([1, 2, 3, 16]), y: [2, 6, 3, 12], mode: "lines" }]; */
     const data = aesFiles.map((aes, i) => {
         let dash = "solid";
-        if (i > 9) dash = "dash"
+        if (i > 9) dash = "dash";
         return {
             x: aes.xData,
             y: aes.yData,
@@ -111,7 +113,7 @@ function AesPlot() {
             name: aes.filename,
             line: {
                 dash: dash,
-            }
+            },
         };
     });
 
@@ -136,7 +138,6 @@ function App() {
     return (
         <FullWindowDropzone>
             <div className="App">
-                <p>Hello</p>
                 {aesFiles.length > 0 && <AesPlot />}
             </div>
         </FullWindowDropzone>
