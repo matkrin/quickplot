@@ -6,6 +6,7 @@ import Plot from "react-plotly.js";
 import Plotly, { Config, Layout, PlotlyHTMLElement } from "plotly.js";
 import { size } from "lodash";
 import { useStore } from "./store";
+import { yAutoscaleIcon } from "./y_autoscale_icon";
 
 type DropzoneProps = {
     children: JSX.Element;
@@ -131,10 +132,7 @@ function AesPlot() {
             {
                 title: "Autoscale Y-Axis",
                 name: "autoscale_y_axis",
-                icon: {
-                    path:
-                        "M 0,0 V 0 M 82.581766,17.30951 V 183.76279 L 105.27935,183.9573 104.98563,17.30951 Z M 27.574338,183.63362 H 155.0076 v 0 c 16.69408,0 30.22732,9.04382 30.22732,20.19994 0,11.15612 -13.53324,20.19994 -30.22732,20.19994 H 27.574338 v 0 c -16.694099,0 -30.2273392,-9.04382 -30.2273392,-20.19994 0,-11.15611 13.5332402,-20.19994 30.2273392,-20.19994 z M 27.497577,-22.073737 H 154.96436 v 0 c 16.69847,0 30.23528,8.966023 30.23528,20.0261744 0,11.0601481 -13.53681,20.0261746 -30.23528,20.0261746 H 27.497577 v 0 c -16.69849,0 -30.2352902,-8.9660255 -30.2352902,-20.0261746 0,-11.0601504 13.5368002,-20.0261744 30.2352902,-20.0261744 z",
-                },
+                icon: yAutoscaleIcon,
                 click: (gd: PlotlyHTMLElement) => {
                     // @ts-ignore
                     const selectedXRange = gd.layout.xaxis.range;
