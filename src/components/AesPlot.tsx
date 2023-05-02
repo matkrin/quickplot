@@ -5,12 +5,6 @@ import { yAutoscaleIcon } from "./y_autoscale_icon";
 
 export default function AesPlot() {
     const aesFiles = useStore((state) => state.aesFiles);
-    const yMin = Math.min(...aesFiles.map((af) => {
-        return Math.min(...af.yData);
-    }));
-    const yMax = Math.max(...aesFiles.map((af) => {
-        return Math.max(...af.yData);
-    }));
     const [yRange, setYRange] = useStore((
         state,
     ) => [state.yRange, state.setYRange]);
