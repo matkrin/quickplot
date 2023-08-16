@@ -1,2 +1,2 @@
 format:
-	deno fmt --indent-width 4
+	deno fmt --indent-width 4 --ignore="dist"
