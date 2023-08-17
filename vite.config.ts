@@ -6,8 +6,8 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
     registerType: "autoUpdate",
     includeAssets: ["favicon.ico", "pwa-192x192.png", "pwa-512x512.png"],
     manifest: {
-        name: "Webplot",
-        short_name: "Webplot",
+        name: "Quickplot",
+        short_name: "Quickplot",
         description: "Plot data",
         theme_color: "#ffffff",
         //start_url: "/",
@@ -38,5 +38,5 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [react(), VitePWA(manifestForPlugin)],
-    base: "/webplot/",
+    base: "/quickplot/",
 });
