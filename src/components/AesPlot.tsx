@@ -1,6 +1,7 @@
 import { Config, Layout, PlotlyHTMLElement } from "plotly.js";
 import Plot from "react-plotly.js";
-import { useStore } from "../store";
+import { normalizeForRange, useStore } from "../store";
+import NormalizationSlider from "./NormalizationSlider";
 import { yAutoscaleIcon } from "./y_autoscale_icon";
 
 export default function AesPlot() {
@@ -11,6 +12,8 @@ export default function AesPlot() {
     const [xRange, setXRange] = useStore((
         state,
     ) => [state.xRange, state.setXRange]);
+    const isNormalize = useStore((state) => state.isNormalize);
+    const normRange = useStore((state) => state.normRange);
 
     const layout: Partial<Layout> = {
         autosize: true,
@@ -87,12 +90,16 @@ export default function AesPlot() {
         ],
     };
 
+    const plotData = isNormalize
+        ? normalizeForRange(aesFiles, normRange)
+        : aesFiles;
+
     const data = aesFiles.map((aes, i) => {
         let dash = "solid";
         if (i > 9) dash = "dash";
         return {
-            x: aes.xData,
-            y: aes.yData,
+            x: plotData[i].xData,
+            y: plotData[i].yData,
             mode: "lines",
             name: aes.filename,
             line: {
@@ -102,17 +109,20 @@ export default function AesPlot() {
     });
 
     return (
-        <Plot
-            style={{
-                width: "70vw",
-                height: "75vh",
-                position: "relative",
-                display: "inline-block",
-            }}
-            data={data}
-            layout={layout}
-            useResizeHandler={true}
-            config={config}
-        />
+        <>
+            <Plot
+                style={{
+                    width: "70vw",
+                    height: "75vh",
+                    position: "relative",
+                    display: "inline-block",
+                }}
+                data={data}
+                layout={layout}
+                useResizeHandler={true}
+                config={config}
+            />
+            <NormalizationSlider />
+        </>
     );
 }

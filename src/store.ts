@@ -5,9 +5,13 @@ type Store = {
     aesFiles: Array<AesStaib>;
     xRange: Array<number>;
     yRange: Array<number>;
+    isNormalize: boolean;
+    normRange: [number, number];
     setAesFiles: (newFiles: Array<AesStaib>) => void;
     setXRange: (selectedXRange: Array<number>) => void;
     setYRange: (selectedXRange: Array<number>) => void;
+    setNormalize: (newNormalize: boolean) => void;
+    setNormRange: (newNormRange: [number, number]) => void;
 };
 
 export const useStore = create<Store>((set) => {
@@ -15,6 +19,8 @@ export const useStore = create<Store>((set) => {
         aesFiles: [],
         xRange: [],
         yRange: [],
+        isNormalize: false,
+        normRange: [0, 0],
 
         setAesFiles: (newFiles) => {
             set((state) => {
@@ -55,11 +61,58 @@ export const useStore = create<Store>((set) => {
                 };
             });
         },
+
+        setNormalize: (newNormalize: boolean) => {
+            set(() => {
+                return { isNormalize: newNormalize };
+            });
+        },
+
+        setNormRange: (newNormRange: [number, number]) => {
+            set(() => {
+                return { normRange: newNormRange };
+            });
+        },
     };
 });
 
-function closestIndex(arr: number[], value: number) {
+function closestIndex(arr: number[], value: number): number {
     const diffArr = arr.map((x) => Math.abs(value - x));
     const minNumber = Math.min(...diffArr);
     return diffArr.findIndex((x) => x === minNumber);
+}
+
+function yMeanForXRange(
+    xArr: number[],
+    yArr: number[],
+    xStart: number,
+    xEnd: number,
+): number {
+    const startIndex = closestIndex(xArr, xStart);
+    const endIndex = closestIndex(xArr, xEnd);
+    const sliced = yArr.slice(startIndex, endIndex);
+    return sliced.reduce((acc, x) => acc + x, 0) / sliced.length;
+}
+
+export function normalizeForRange(
+    aesFiles: AesStaib[],
+    normRange: [number, number],
+): { xData: number[]; yData: number[] }[] {
+    const meanFirst = yMeanForXRange(
+        aesFiles[0].xData,
+        aesFiles[0].yData,
+        normRange[0],
+        normRange[1],
+    );
+    return aesFiles.map((af) => {
+        const mean = yMeanForXRange(
+            af.xData,
+            af.yData,
+            normRange[0],
+            normRange[1],
+        );
+        const f = meanFirst / mean;
+        const normY = af.yData.map((n) => n * f);
+        return { xData: af.xData, yData: normY };
+    });
 }
