@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import savitzkyGolay from "ml-savitzky-golay";
 import { AesStaib } from "./vamas";
 
 type Store = {
@@ -7,11 +8,20 @@ type Store = {
     yRange: Array<number>;
     isNormalize: boolean;
     normRange: [number, number];
+    isSmoothing: boolean;
+    savitzkyGolayOpts: SavitzkyGolayOpts;
     setAesFiles: (newFiles: Array<AesStaib>) => void;
     setXRange: (selectedXRange: Array<number>) => void;
     setYRange: (selectedXRange: Array<number>) => void;
     setNormalize: (newNormalize: boolean) => void;
     setNormRange: (newNormRange: [number, number]) => void;
+    setSmoothing: (newSmoothing: boolean) => void;
+    setSavitzkyGolayOpts: (newOpts: SavitzkyGolayOpts) => void;
+};
+
+type SavitzkyGolayOpts = {
+    window: number;
+    polynomial: number;
 };
 
 export const useStore = create<Store>((set) => {
@@ -21,6 +31,8 @@ export const useStore = create<Store>((set) => {
         yRange: [],
         isNormalize: false,
         normRange: [0, 0],
+        isSmoothing: false,
+        savitzkyGolayOpts: { window: 5, derivative: 1, polynomial: 2 },
 
         setAesFiles: (newFiles) => {
             set((state) => {
@@ -73,6 +85,18 @@ export const useStore = create<Store>((set) => {
                 return { normRange: newNormRange };
             });
         },
+
+        setSmoothing: (newSmoothing: boolean) => {
+            set(() => {
+                return { isSmoothing: newSmoothing };
+            });
+        },
+
+        setSavitzkyGolayOpts: (newSavGolOpts: SavitzkyGolayOpts) => {
+            set(() => {
+                return { savitzkyGolayOpts: newSavGolOpts };
+            });
+        },
     };
 });
 
@@ -94,25 +118,44 @@ function yMeanForXRange(
     return sliced.reduce((acc, x) => acc + x, 0) / sliced.length;
 }
 
+type PlotData = Array<{ xData: Array<number>; yData: Array<number> }>;
+
 export function normalizeForRange(
-    aesFiles: AesStaib[],
+    plotData: PlotData,
     normRange: [number, number],
-): { xData: number[]; yData: number[] }[] {
+): PlotData {
     const meanFirst = yMeanForXRange(
-        aesFiles[0].xData,
-        aesFiles[0].yData,
+        plotData[0].xData,
+        plotData[0].yData,
         normRange[0],
         normRange[1],
     );
-    return aesFiles.map((af) => {
+    return plotData.map((i) => {
         const mean = yMeanForXRange(
-            af.xData,
-            af.yData,
+            i.xData,
+            i.yData,
             normRange[0],
             normRange[1],
         );
         const f = meanFirst / mean;
-        const normY = af.yData.map((n) => n * f);
-        return { xData: af.xData, yData: normY };
+        const normY = i.yData.map((n) => n * f);
+        return { xData: i.xData, yData: normY };
+    });
+}
+
+export function aesSavGol(
+    plotData: PlotData,
+    savGolOpts: SavitzkyGolayOpts,
+): PlotData {
+    return plotData.map((i) => {
+        const opts = {
+            pad: "post" as const,
+            derivative: 0,
+            windowSize: savGolOpts.window,
+            polynomial: savGolOpts.polynomial,
+        };
+        const step = i.xData[1] - i.xData[0];
+        const smoothedY = savitzkyGolay(i.yData, step, opts);
+        return { xData: i.xData, yData: smoothedY };
     });
 }

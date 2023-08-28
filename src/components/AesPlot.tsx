@@ -1,7 +1,6 @@
 import { Config, Layout, PlotlyHTMLElement } from "plotly.js";
 import Plot from "react-plotly.js";
-import { normalizeForRange, useStore } from "../store";
-import NormalizationSlider from "./NormalizationSlider";
+import { aesSavGol, normalizeForRange, useStore } from "../store";
 import { yAutoscaleIcon } from "./y_autoscale_icon";
 
 export default function AesPlot() {
@@ -14,6 +13,9 @@ export default function AesPlot() {
     ) => [state.xRange, state.setXRange]);
     const isNormalize = useStore((state) => state.isNormalize);
     const normRange = useStore((state) => state.normRange);
+
+    const isSmoothing = useStore((state) => state.isSmoothing);
+    const savitzkyGolayOpts = useStore((state) => state.savitzkyGolayOpts);
 
     const layout: Partial<Layout> = {
         autosize: true,
@@ -90,9 +92,9 @@ export default function AesPlot() {
         ],
     };
 
-    const plotData = isNormalize
-        ? normalizeForRange(aesFiles, normRange)
-        : aesFiles;
+    let plotData = aesFiles.map((af) => ({ xData: af.xData, yData: af.yData }));
+    plotData = isNormalize ? normalizeForRange(plotData, normRange) : aesFiles;
+    plotData = isSmoothing ? aesSavGol(plotData, savitzkyGolayOpts) : plotData;
 
     const data = aesFiles.map((aes, i) => {
         let dash = "solid";
@@ -122,7 +124,6 @@ export default function AesPlot() {
                 useResizeHandler={true}
                 config={config}
             />
-            <NormalizationSlider />
         </>
     );
 }
