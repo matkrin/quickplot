@@ -63,49 +63,40 @@ export default function NormalizationSlider() {
     };
 
     return (
-        <>
-            <div
-                style={{
-                    width: "70vw",
-                    // height: "75vh",
-                    position: "relative",
-                    display: "inline-block",
-                }}
-            >
-                <hr />
-                <div style={{ display: "flex" }}>
-                    <input type="checkbox" onChange={handleNormalizeCheckbox} />
-                    <p>Normalize for range</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                    <input
-                        type="number"
-                        value={normRange[0]}
-                        onChange={handleMinInput}
-                        min={xMin}
-                        max={xMax}
-                        step="0.1"
-                        style={{ width: "60px" }}
-                    />
-                    <input
-                        type="number"
-                        value={normRange[1]}
-                        onChange={handleMaxInput}
-                        min={xMin}
-                        max={xMax}
-                        step="0.1"
-                        style={{ width: "60px", marginRight: "15px" }}
-                    />
-                    <Slider
-                        min={xMin}
-                        max={xMax}
-                        value={normRange}
-                        onChange={handleSliderChange}
-                        valueLabelDisplay="auto"
-                        disableSwap
-                    />
-                </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex" }}>
+                <input type="checkbox" onChange={handleNormalizeCheckbox} />
+                <p>Normalize for range</p>
             </div>
-        </>
+            <div style={{ display: "flex" }}>
+                <input
+                    type="number"
+                    value={normRange[0]}
+                    onChange={handleMinInput}
+                    min={xMin}
+                    max={xMax}
+                    step="0.1"
+                    style={{ width: "60px" }}
+                />
+                <input
+                    type="number"
+                    value={normRange[1]}
+                    onChange={handleMaxInput}
+                    min={xMin}
+                    max={xMax}
+                    step="0.1"
+                    style={{ width: "60px", marginRight: "15px" }}
+                />
+                <Slider
+                    style={{ width: "30vw" }}
+                    min={xMin}
+                    max={xMax}
+                    value={normRange}
+                    onChange={handleSliderChange}
+                    valueLabelDisplay="auto"
+                    disableSwap
+                />
+            </div>
+        </div>
     );
 }

@@ -44,14 +44,7 @@ export default function Smoothing(): JSX.Element {
     };
 
     return (
-        <div
-            style={{
-                width: "70vw",
-                // height: "75vh",
-                position: "relative",
-                display: "inline-block",
-            }}
-        >
+        <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex" }}>
                 <input type="checkbox" onChange={handleSmoothingCheckbox} />
                 <p>Savitzky-Golay</p>
