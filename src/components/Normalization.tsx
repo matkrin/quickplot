@@ -60,6 +60,12 @@ export default function NormalizationSlider() {
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
         event.target.checked ? setNormalize(true) : setNormalize(false);
+        if (normRange[0] === 0 && normRange[1] === 0) {
+            const maxE = Math.max(...aesFiles.map(af => {
+                return af.xData[af.xData.length - 1];
+            }));
+            setNormRange([maxE * 0.95, maxE]);
+        }
     };
 
     return (
@@ -68,7 +74,7 @@ export default function NormalizationSlider() {
                 <input type="checkbox" onChange={handleNormalizeCheckbox} />
                 <p>Normalize for range</p>
             </div>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
                 <input
                     type="number"
                     value={normRange[0]}
