@@ -11,6 +11,7 @@ type Store = {
     isSmoothing: boolean;
     savitzkyGolayOpts: SavitzkyGolayOpts;
     setAesFiles: (newFiles: Array<AesStaib>) => void;
+    addAesFiles: (newFiles: Array<AesStaib>) => void;
     setXRange: (selectedXRange: Array<number>) => void;
     setYRange: (selectedXRange: Array<number>) => void;
     setNormalize: (newNormalize: boolean) => void;
@@ -35,6 +36,11 @@ export const useStore = create<Store>((set) => {
         savitzkyGolayOpts: { window: 5, derivative: 1, polynomial: 2 },
 
         setAesFiles: (newFiles) => {
+            set(() => {
+                return { aesFiles: newFiles };
+            });
+        },
+
         addAesFiles: (newFiles) => {
             set((state) => {
                 newFiles.sort((a, b) => {

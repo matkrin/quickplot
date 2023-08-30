@@ -4,6 +4,7 @@ import FullWindowDropzone from "./components/FullWindowDropzone";
 import AesPlot from "./components/AesPlot";
 import Normalization from "./components/Normalization";
 import Smoothing from "./components/Smoothing";
+import AesTable from "./components/AesTable";
 
 function App() {
     const aesFiles = useStore((state) => state.aesFiles);
@@ -31,6 +32,8 @@ function App() {
                                     <Normalization />
                                     <Smoothing />
                                 </div>
+                                <hr style={{ marginTop: "20px" }} />
+                                <AesTable />
                             </div>
                         </>
                     )}
