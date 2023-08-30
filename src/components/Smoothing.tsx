@@ -49,7 +49,7 @@ export default function Smoothing(): JSX.Element {
                 <input type="checkbox" onChange={handleSmoothingCheckbox} />
                 <p>Savitzky-Golay</p>
             </div>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
                 <label style={{ marginRight: "15px" }}>Window:</label>
                 <input
                     type="number"
@@ -58,7 +58,7 @@ export default function Smoothing(): JSX.Element {
                     min={5}
                     // max={xMax}
                     step="2"
-                    style={{ width: "60px", marginRight: "30px" }}
+                    style={{ width: "40px", marginRight: "30px" }}
                 />
                 <label style={{ marginRight: "15px" }}>Polynomial:</label>
                 <input
@@ -68,7 +68,7 @@ export default function Smoothing(): JSX.Element {
                     min={1}
                     max={polyMax}
                     step="1"
-                    style={{ width: "60px", marginRight: "30px" }}
+                    style={{ width: "40px", marginRight: "30px" }}
                 />
             </div>
         </div>
