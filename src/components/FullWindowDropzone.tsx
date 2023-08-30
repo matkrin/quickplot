@@ -8,7 +8,7 @@ type DropzoneProps = {
 };
 
 export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
-    const setAesFiles = useStore((state) => state.setAesFiles);
+    const addAesFiles = useStore((state) => state.addAesFiles);
 
     const onDrop = useCallback(async (acceptedFiles: Array<File>) => {
         const fileContents = await Promise.all(
@@ -18,7 +18,7 @@ export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
         aesFiles.forEach((f, i) =>
             f.setFilename(acceptedFiles[i].name.split(".")[0])
         );
-        setAesFiles(aesFiles);
+        addAesFiles(aesFiles);
     }, []);
 
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -35,7 +35,7 @@ export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
             <input {...getInputProps()} />
             {isDragActive
                 ? <p>Drop 'em</p>
-                : <p>Drag file(s) or folder click</p>}
+                : <p>Drag file(s) or folder</p>}
             <button onClick={open}>Browse</button>
             {props.children}
         </div>

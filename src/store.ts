@@ -35,6 +35,7 @@ export const useStore = create<Store>((set) => {
         savitzkyGolayOpts: { window: 5, derivative: 1, polynomial: 2 },
 
         setAesFiles: (newFiles) => {
+        addAesFiles: (newFiles) => {
             set((state) => {
                 newFiles.sort((a, b) => {
                     return a.datetime < b.datetime ? -1 : 1;
