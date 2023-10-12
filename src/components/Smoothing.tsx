@@ -22,7 +22,10 @@ export default function Smoothing(): JSX.Element {
     };
 
     const handleWindowChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value !== "") {
+        if (
+            event.target.value !== "" &&
+            Number(event.target.value) > savitzkyGolayOpts.polynomial
+        ) {
             const newSavGolOpts = {
                 ...savitzkyGolayOpts,
                 window: Number(event.target.value),
@@ -34,7 +37,10 @@ export default function Smoothing(): JSX.Element {
     const handlePolynomialChange = (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
-        if (event.target.value !== "") {
+        if (
+            event.target.value !== "" &&
+            Number(event.target.value) < savitzkyGolayOpts.window
+        ) {
             const newSavGolOpts = {
                 ...savitzkyGolayOpts,
                 polynomial: Number(event.target.value),

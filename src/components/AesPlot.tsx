@@ -94,7 +94,13 @@ export default function AesPlot() {
 
     let plotData = aesFiles.map((af) => ({ xData: af.xData, yData: af.yData }));
     plotData = isNormalize ? normalizeForRange(plotData, normRange) : aesFiles;
-    plotData = isSmoothing ? aesSavGol(plotData, savitzkyGolayOpts) : plotData;
+    try {
+        plotData = isSmoothing
+            ? aesSavGol(plotData, savitzkyGolayOpts)
+            : plotData;
+    } catch (e) {
+        console.log(e);
+    }
 
     const data = aesFiles.map((aes, i) => {
         let dash = "solid";

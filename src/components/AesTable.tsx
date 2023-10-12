@@ -19,20 +19,27 @@ export default function AesTable(): JSX.Element {
     );
 
     const handleClick = (filename: string) => {
-        const newAesFiles = aesFiles.filter(af => af.filename !== filename);
+        const newAesFiles = aesFiles.filter((af) => af.filename !== filename);
         setAesFiles(newAesFiles);
-    }
+    };
 
     const tableEntries = aesFiles.map((af, i) => {
         const color = PLOT_COLORS[i % 10];
-        const line = i < 10 ? "―" : "- -"
+        const line = i < 10 ? "―" : "- -";
         return (
             <tr key={af.filename}>
-                <td style={{color: color}}>
-                    <strong style={{fontSize: "60 px"}}>{line}</strong>
+                <td style={{ color: color }}>
+                    <strong style={{ fontSize: "60 px" }}>{line}</strong>
                 </td>
                 <td>{af.filename}</td>
-                <td><button onClick={() => handleClick(af.filename)} className="x-btn">&#10761;</button></td>
+                <td>
+                    <button
+                        onClick={() => handleClick(af.filename)}
+                        className="x-btn"
+                    >
+                        &#10761;
+                    </button>
+                </td>
             </tr>
         );
     });

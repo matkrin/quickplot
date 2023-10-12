@@ -33,9 +33,7 @@ export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
             {...getRootProps()}
         >
             <input {...getInputProps()} />
-            {isDragActive
-                ? <p>Drop 'em</p>
-                : <p>Drag file(s) or folder</p>}
+            {isDragActive ? <p>Drop 'em</p> : <p>Drag file(s) or folder</p>}
             <button onClick={open}>Browse</button>
             {props.children}
         </div>
