@@ -1,8 +1,8 @@
-import { create } from "zustand";
+import { StateCreator } from "zustand";
 import savitzkyGolay from "ml-savitzky-golay";
-import { AesStaib } from "./vamas";
+import { AesStaib } from "../vamas";
 
-type Store = {
+export type AesSlice = {
     aesFiles: Array<AesStaib>;
     xRange: Array<number>;
     yRange: Array<number>;
@@ -11,6 +11,7 @@ type Store = {
     isSmoothing: boolean;
     savitzkyGolayOpts: SavitzkyGolayOpts;
     setAesFiles: (newFiles: Array<AesStaib>) => void;
+    addAesFile: (newFile: AesStaib) => void;
     addAesFiles: (newFiles: Array<AesStaib>) => void;
     setXRange: (selectedXRange: Array<number>) => void;
     setYRange: (selectedXRange: Array<number>) => void;
@@ -25,7 +26,7 @@ type SavitzkyGolayOpts = {
     polynomial: number;
 };
 
-export const useStore = create<Store>((set) => {
+export const createAesSlice: StateCreator<AesSlice> = (set) => {
     return {
         aesFiles: [],
         xRange: [],
@@ -38,6 +39,12 @@ export const useStore = create<Store>((set) => {
         setAesFiles: (newFiles) => {
             set(() => {
                 return { aesFiles: newFiles };
+            });
+        },
+
+        addAesFile: (newFile) => {
+            set((state) => {
+                return { aesFiles: [...state.aesFiles, newFile] };
             });
         },
 
@@ -105,7 +112,7 @@ export const useStore = create<Store>((set) => {
             });
         },
     };
-});
+};
 
 function closestIndex(arr: number[], value: number): number {
     const diffArr = arr.map((x) => Math.abs(value - x));

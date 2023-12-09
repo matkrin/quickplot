@@ -1,6 +1,6 @@
 import Slider from "@mui/material/Slider";
 
-import { useStore } from "../../store";
+import { useStore } from "../../stores/store";
 
 const MIN_DISTANCE = 1;
 

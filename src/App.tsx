@@ -1,5 +1,5 @@
 import "./App.css";
-import { useStore } from "./store";
+import { useStore } from "./stores/store";
 import FullWindowDropzone from "./components/FullWindowDropzone";
 import Aes from "./components/Aes/Aes";
 
