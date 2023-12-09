@@ -1,6 +1,6 @@
 import { Config, Layout, PlotlyHTMLElement } from "plotly.js";
 import Plot from "react-plotly.js";
-import { aesSavGol, normalizeForRange, useStore } from "../store";
+import { aesSavGol, normalizeForRange, useStore } from "../../store";
 import { yAutoscaleIcon } from "./y_autoscale_icon";
 
 export default function AesPlot() {

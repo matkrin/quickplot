@@ -1,4 +1,4 @@
-import { useStore } from "../store";
+import { useStore } from "../../store";
 
 const PLOT_COLORS = [
     "#1f77b4",

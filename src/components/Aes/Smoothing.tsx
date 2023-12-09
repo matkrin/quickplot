@@ -1,4 +1,4 @@
-import { useStore } from "../store";
+import { useStore } from "../../store";
 
 export default function Smoothing(): JSX.Element {
     const setSmoothing = useStore(
