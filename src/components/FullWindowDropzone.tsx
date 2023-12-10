@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { useStore } from "../store";
+import { Mul } from "../mulfile";
+import { useStore } from "../stores/store";
 import { AesStaib } from "../vamas";
 
 type DropzoneProps = {
@@ -8,17 +9,34 @@ type DropzoneProps = {
 };
 
 export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
+    const addAesFile = useStore((state) => state.addAesFile);
     const addAesFiles = useStore((state) => state.addAesFiles);
+    const addMulFile = useStore((state) => state.addMulFile);
 
     const onDrop = useCallback(async (acceptedFiles: Array<File>) => {
-        const fileContents = await Promise.all(
-            acceptedFiles.map((f) => f.text()),
-        );
-        const aesFiles = fileContents.map((fc) => new AesStaib(fc));
-        aesFiles.forEach((f, i) =>
-            f.setFilename(acceptedFiles[i].name.split(".")[0])
-        );
-        addAesFiles(aesFiles);
+        if (acceptedFiles.every((f) => f.name.endsWith(".vms"))) {
+            const fileContents = await Promise.all(
+                acceptedFiles.map((f) => f.text()),
+            );
+            const aesFiles = fileContents.map((fc) => new AesStaib(fc));
+            aesFiles.forEach((f, i) =>
+                f.setFilename(acceptedFiles[i].name.split(".")[0])
+            );
+            addAesFiles(aesFiles);
+        } else {
+            acceptedFiles.forEach(async (f) => {
+                if (f.name.endsWith(".vms")) {
+                    const fileContent = await f.text();
+                    const aesFile = new AesStaib(fileContent);
+                    aesFile.setFilename(f.name);
+                    addAesFile(aesFile);
+                } else if (f.name.endsWith(".mul") || f.name.endsWith(".flm")) {
+                    const fileContent = await f.arrayBuffer();
+                    const mulFile = new Mul(fileContent);
+                    addMulFile(mulFile);
+                }
+            });
+        }
     }, []);
 
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({

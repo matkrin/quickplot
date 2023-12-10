@@ -1,35 +1,80 @@
-export class MulImage {
-  constructor(
-    public imgNum: number,
-    public byteSize: number,
-    public xres: number,
-    public yres: number,
-    public zres: number,
-    public datetime: Date,
-    public xsize: number,
-    public ysize: number,
-    public xoffset: number,
-    public yoffset: number,
-    public zscale: number,
-    public tilt: number,
-    public speed: number,
-    public lineTime: number,
-    public bias: number,
-    public current: number,
-    public sample: string,
-    public title: string,
-    public postpr: number,
-    public postd1: number,
-    public mode: number,
-    public currfac: number,
-    public numPointscans: number,
-    public unitnr: number,
-    public version: number,
-    public gain: number,
-    public imgData: Uint16Array | Uint8ClampedArray
-  ) {}
-}
+import { rocket } from "./rocket";
 
+export class MulImage {
+    constructor(
+        public imgNum: number,
+        public byteSize: number,
+        public xres: number,
+        public yres: number,
+        public zres: number,
+        public datetime: Date,
+        public xsize: number,
+        public ysize: number,
+        public xoffset: number,
+        public yoffset: number,
+        public zscale: number,
+        public tilt: number,
+        public speed: number,
+        public lineTime: number,
+        public bias: number,
+        public current: number,
+        public sample: string,
+        public title: string,
+        public postpr: number,
+        public postd1: number,
+        public mode: number,
+        public currfac: number,
+        public numPointscans: number,
+        public unitnr: number,
+        public version: number,
+        public gain: number,
+        public imgData: Uint16Array | Uint8ClampedArray,
+    ) {}
+
+    imgDataToUint8Clamped(colormap: string) {
+        console.log(this.imgData.length > this.xres * this.yres);
+        if (this.imgData.length > this.xres * this.yres) {
+            return
+        }
+        const imageData = this.imgData as Uint16Array;
+        const min = imageData.reduce((min: number, v: number) =>
+            Math.min(min, v)
+        );
+        const max = imageData.reduce((max: number, v: number) =>
+            Math.max(max, v)
+        );
+        const diff = max - min;
+
+        const newArr = new Uint8ClampedArray(this.imgData.length * 4);
+
+        for (let i = 0; i < this.imgData.length; i++) {
+            const grey = 255 -
+                Math.round(((this.imgData[i] - min) / diff) * 255);
+            newArr[4 * i + 3] = 255;
+            if (colormap === "rocket") {
+                newArr[4 * i] = rocket[grey][0];
+                newArr[4 * i + 1] = rocket[grey][1];
+                newArr[4 * i + 2] = rocket[grey][2];
+            } else if (colormap === "grey") {
+                newArr[4 * i] = grey;
+                newArr[4 * i + 1] = grey;
+                newArr[4 * i + 2] = grey;
+            }
+        }
+        this.imgData = newArr;
+    }
+
+    flipImgData() {
+        const len = this.imgData.length;
+        const newArr = new Uint16Array(len);
+
+        for (let i = len; i > 0; i -= this.yres) {
+            const line = this.imgData.slice(i - this.yres, i);
+            newArr.set(line, len - i);
+        }
+        this.imgData = newArr;
+    }
+}
 
 export function parseMul(buffer: ArrayBuffer) {
     // const buffer = file.arrayBuffer();
