@@ -9,7 +9,12 @@ export default function Mul(): JSX.Element {
         <>
             {mulFiles.map((mul) => {
                 return mul.imgs.map((mulImage) => {
-                    return <StmImageCanvas key={mulImage.imgNum} mulImage={mulImage} />;
+                    return (
+                        <StmImageCanvas
+                            key={mulImage.imgNum}
+                            mulImage={mulImage}
+                        />
+                    );
                 });
             })}
         </>
@@ -21,12 +26,11 @@ function StmImageCanvas(props: { mulImage: MulImage }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        // mulImage.flipImgData();
-        mulImage.imgDataToUint8Clamped("rocket");
-        console.log(mulImage.imgNum)
-        console.log(mulImage.imgData.length)
-        console.log(mulImage.xres)
-        console.log(mulImage.yres)
+        mulImage.process();
+        console.log(mulImage.imgNum);
+        console.log(mulImage.imgData.length);
+        console.log(mulImage.xres);
+        console.log(mulImage.yres);
 
         const imageData = new ImageData(
             mulImage.imgData as Uint8ClampedArray,

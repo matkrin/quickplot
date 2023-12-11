@@ -1,6 +1,13 @@
 import { rocket } from "./rocket";
+import ndarray, { NdArray } from "ndarray";
+import qr from "ndarray-householder-qr";
+import ops from "ndarray-ops";
+import fill from "ndarray-fill";
+import concatCols from "ndarray-concat-cols";
 
 export class MulImage {
+    private isProcessed: boolean;
+
     constructor(
         public imgNum: number,
         public byteSize: number,
@@ -28,15 +35,31 @@ export class MulImage {
         public unitnr: number,
         public version: number,
         public gain: number,
-        public imgData: Uint16Array | Uint8ClampedArray,
-    ) {}
+        public imgData: Float32Array | Uint8ClampedArray,
+    ) {
+        this.isProcessed = false;
+    }
+
+    process() {
+        if (this.isProcessed) return;
+
+        this.flipImgData();
+
+        let start = performance.now();
+        this.correctPlane();
+        console.log("plane", performance.now() - start);
+
+        this.correctLines();
+        this.imgDataToUint8Clamped("rocket");
+
+        this.isProcessed = true;
+    }
 
     imgDataToUint8Clamped(colormap: string) {
-        console.log(this.imgData.length > this.xres * this.yres);
         if (this.imgData.length > this.xres * this.yres) {
-            return
+            return;
         }
-        const imageData = this.imgData as Uint16Array;
+        const imageData = this.imgData as Float32Array;
         const min = imageData.reduce((min: number, v: number) =>
             Math.min(min, v)
         );
@@ -66,13 +89,88 @@ export class MulImage {
 
     flipImgData() {
         const len = this.imgData.length;
-        const newArr = new Uint16Array(len);
+        const newArr = new Float32Array(len);
 
         for (let i = len; i > 0; i -= this.yres) {
             const line = this.imgData.slice(i - this.yres, i);
             newArr.set(line, len - i);
         }
         this.imgData = newArr;
+    }
+
+    correctPlane() {
+        const arr: NdArray = ndarray(new Float32Array(this.imgData), [
+            512,
+            512,
+        ]);
+        const arrFlat = ndarray(new Float32Array(this.imgData));
+        arrFlat.shape = [512 * 512];
+        arrFlat.stride = [1];
+
+        const ones = ndarray(new Float32Array(512 * 512), [512, 512]);
+        fill(ones, () => 1);
+        const xCoords = ndarray(new Float32Array(512 * 512), [512, 512]);
+        fill(xCoords, (_: number, j: number) => j);
+        const yCoords = ndarray(new Float32Array(512 * 512), [512, 512]);
+        fill(yCoords, (i: number, _: number) => i);
+
+        // flatten arrays
+        ones.shape = [512 * 512, 1];
+        ones.stride = [1, 1];
+        xCoords.shape = [512 * 512, 1];
+        xCoords.stride = [1, 1];
+        yCoords.shape = [512 * 512, 1];
+        yCoords.stride = [1, 1];
+        // create the coefficient matrix
+        const coefficientMatrix = concatCols([ones, xCoords, yCoords]);
+
+        // 512 x 512 again
+        ones.shape = [512, 512];
+        ones.stride = [512, 1];
+        xCoords.shape = [512, 512];
+        xCoords.stride = [512, 1];
+        yCoords.shape = [512, 512];
+        yCoords.stride = [512, 1];
+
+        // allocate factor
+        const qrFactor = ndarray(new Float32Array(3));
+        // save qr result from coefficent matrix in factor
+        qr.factor(coefficientMatrix, qrFactor);
+        // solve system of linear equations, the resulting vector is saved in
+        //   the first three elements of original_flat
+        qr.solve(coefficientMatrix, qrFactor, arrFlat);
+
+        // get these elements
+        const first = arrFlat.get(0);
+        const second = arrFlat.get(1);
+        const third = arrFlat.get(2);
+
+        // allocate matrix for the background
+        const correction = ndarray(new Float32Array(512 * 512), [512, 512]);
+        // calculate background
+        ops.mulseq(ones, first);
+        ops.mulseq(xCoords, second);
+        ops.mulseq(yCoords, third);
+        ops.add(correction, ones, xCoords);
+        ops.addeq(correction, yCoords);
+
+        // get another original as image matrix as first three elements were overwritten
+        // substract background
+        ops.subeq(arr, correction);
+        this.imgData = new Float32Array(arr.data as Float32Array);
+    }
+
+    correctLines() {
+        for (let i = 0; i < this.yres; ++i) {
+            let row = this.imgData.subarray(
+                i * this.yres,
+                (i * this.xres) + this.xres,
+            ) as Float32Array;
+            const rowMean = row.reduce((a, b) => a + b, 0) / this.xres;
+            for (let j = 0; j < this.xres; ++j) {
+                row[j] -= rowMean;
+            }
+        }
     }
 }
 
@@ -236,7 +334,7 @@ export function parseMul(buffer: ArrayBuffer) {
                 unitnr,
                 version,
                 gain,
-                imgData,
+                new Float32Array(imgData),
             ),
         );
     }
