@@ -6,18 +6,45 @@ export default function Mul(): JSX.Element {
     const mulFiles = useStore((state) => state.mulFiles);
 
     return (
-        <>
-            {mulFiles.map((mul) => {
-                return mul.imgs.map((mulImage) => {
-                    return (
-                        <StmImageCanvas
-                            key={mulImage.imgNum}
-                            mulImage={mulImage}
-                        />
-                    );
-                });
+        <div>
+            {mulFiles.map((mulfile) => {
+                return (
+                    <>
+                        <h2 key={mulfile.filename}>{mulfile.filename}</h2>
+                        <div style={{ display: "flex", flexWrap: "wrap" }}>
+                            {mulfile.imgs.map((img) => (
+                                <StmImage
+                                    key={img.imgID}
+                                    mulImage={img}
+                                />
+                            ))}
+                        </div>
+                    </>
+                );
             })}
-        </>
+        </div>
+    );
+}
+
+function StmImage(props: { mulImage: MulImage }): JSX.Element {
+    const { mulImage } = props;
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+            }}
+        >
+            <StmImageCanvas
+                mulImage={mulImage}
+            />
+            <span>{mulImage.imgID}</span>
+            <br />
+            <span>{mulImage.sample}</span>
+            <br />
+            <span>{mulImage.datetime.toLocaleString()}</span>
+        </div>
     );
 }
 
@@ -27,10 +54,7 @@ function StmImageCanvas(props: { mulImage: MulImage }) {
 
     useEffect(() => {
         mulImage.process();
-        console.log(mulImage.imgNum);
-        console.log(mulImage.imgData.length);
-        console.log(mulImage.xres);
-        console.log(mulImage.yres);
+        console.log("imgNum", mulImage.imgNum);
 
         const imageData = new ImageData(
             mulImage.imgData as Uint8ClampedArray,

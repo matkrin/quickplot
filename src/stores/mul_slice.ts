@@ -1,9 +1,9 @@
 import { StateCreator } from "zustand";
-import { Mul } from "../mulfile";
+import { MulFile } from "../mulfile";
 
 export type MulSlice = {
-    mulFiles: Array<Mul>;
-    addMulFile: (newFile: Mul) => void;
+    mulFiles: Array<MulFile>;
+    addMulFile: (newFile: MulFile) => void;
 };
 
 export const createMulSlice: StateCreator<MulSlice> = (set) => {
