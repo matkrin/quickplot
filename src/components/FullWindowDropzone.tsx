@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { Mul } from "../mulfile";
+import { MulFile } from "../mulfile";
 import { useStore } from "../stores/store";
 import { AesStaib } from "../vamas";
 
@@ -32,8 +32,9 @@ export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
                     addAesFile(aesFile);
                 } else if (f.name.endsWith(".mul") || f.name.endsWith(".flm")) {
                     const fileContent = await f.arrayBuffer();
-                    const mulFile = new Mul(fileContent);
-                    addMulFile(mulFile);
+                    const mulfile = new MulFile(fileContent);
+                    mulfile.setFilename(f.name);
+                    addMulFile(mulfile);
                 }
             });
         }
