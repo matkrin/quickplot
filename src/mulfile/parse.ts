@@ -1,8 +1,11 @@
 import { rocket } from "./rocket";
 import ndarray, { NdArray } from "ndarray";
-import qr from "ndarray-householder-qr";
 import ops from "ndarray-ops";
+// @ts-ignore
+import qr from "ndarray-householder-qr";
+// @ts-ignore
 import fill from "ndarray-fill";
+// @ts-ignore
 import concatCols from "ndarray-concat-cols";
 
 export class MulImage {
@@ -10,6 +13,7 @@ export class MulImage {
 
     constructor(
         public imgNum: number,
+        public imgID: string,
         public byteSize: number,
         public xres: number,
         public yres: number,
@@ -38,6 +42,10 @@ export class MulImage {
         public imgData: Float32Array | Uint8ClampedArray,
     ) {
         this.isProcessed = false;
+    }
+
+    setImgID(imgID: string) {
+        this.imgID = imgID;
     }
 
     process() {
@@ -100,37 +108,37 @@ export class MulImage {
 
     correctPlane() {
         const arr: NdArray = ndarray(new Float32Array(this.imgData), [
-            512,
-            512,
+            this.yres,
+            this.xres,
         ]);
         const arrFlat = ndarray(new Float32Array(this.imgData));
-        arrFlat.shape = [512 * 512];
+        arrFlat.shape = [this.yres * this.xres];
         arrFlat.stride = [1];
 
-        const ones = ndarray(new Float32Array(512 * 512), [512, 512]);
+        const ones = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
         fill(ones, () => 1);
-        const xCoords = ndarray(new Float32Array(512 * 512), [512, 512]);
+        const xCoords = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
         fill(xCoords, (_: number, j: number) => j);
-        const yCoords = ndarray(new Float32Array(512 * 512), [512, 512]);
+        const yCoords = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
         fill(yCoords, (i: number, _: number) => i);
 
         // flatten arrays
-        ones.shape = [512 * 512, 1];
+        ones.shape = [this.yres * this.xres, 1];
         ones.stride = [1, 1];
-        xCoords.shape = [512 * 512, 1];
+        xCoords.shape = [this.yres * this.xres, 1];
         xCoords.stride = [1, 1];
-        yCoords.shape = [512 * 512, 1];
+        yCoords.shape = [this.xres * this.xres, 1];
         yCoords.stride = [1, 1];
         // create the coefficient matrix
         const coefficientMatrix = concatCols([ones, xCoords, yCoords]);
 
         // 512 x 512 again
-        ones.shape = [512, 512];
-        ones.stride = [512, 1];
-        xCoords.shape = [512, 512];
-        xCoords.stride = [512, 1];
-        yCoords.shape = [512, 512];
-        yCoords.stride = [512, 1];
+        ones.shape = [this.yres, this.xres];
+        ones.stride = [this.yres, 1];
+        xCoords.shape = [this.yres, this.xres];
+        xCoords.stride = [this.yres, 1];
+        yCoords.shape = [this.yres, this.xres];
+        yCoords.stride = [this.yres, 1];
 
         // allocate factor
         const qrFactor = ndarray(new Float32Array(3));
@@ -146,7 +154,7 @@ export class MulImage {
         const third = arrFlat.get(2);
 
         // allocate matrix for the background
-        const correction = ndarray(new Float32Array(512 * 512), [512, 512]);
+        const correction = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
         // calculate background
         ops.mulseq(ones, first);
         ops.mulseq(xCoords, second);
@@ -306,9 +314,11 @@ export function parseMul(buffer: ArrayBuffer) {
         bias = -bias / 3.2768;
         current *= currfac * 0.01;
 
+        const imgID = "";
         images.push(
             new MulImage(
                 imgNum,
+                imgID,
                 byteSize,
                 xres,
                 yres,
