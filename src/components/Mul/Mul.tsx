@@ -28,21 +28,17 @@ export default function Mul(): JSX.Element {
 
 function StmImage(props: { mulImage: MulImage }): JSX.Element {
     const { mulImage } = props;
+    const filename = mulImage.imgID.split("_").slice(0, -1).join("_");
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
+        <div className="stm-image">
             <StmImageCanvas
                 mulImage={mulImage}
             />
-            <span>{mulImage.imgID}</span>
-            <br />
-            <span>{mulImage.sample}</span>
-            <br />
+            <span>
+                {mulImage.imgID.split("_").slice(0, -1).join("_")}{" "}
+                <strong>{`#${mulImage.imgNum}`}</strong>
+            </span>
+            <span>{mulImage.title}</span>
             <span>{mulImage.datetime.toLocaleString()}</span>
         </div>
     );
@@ -54,7 +50,6 @@ function StmImageCanvas(props: { mulImage: MulImage }) {
 
     useEffect(() => {
         mulImage.process();
-        console.log("imgNum", mulImage.imgNum);
 
         const imageData = new ImageData(
             mulImage.imgData as Uint8ClampedArray,
