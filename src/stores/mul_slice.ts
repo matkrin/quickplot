@@ -12,7 +12,9 @@ export const createMulSlice: StateCreator<MulSlice> = (set) => {
 
         addMulFile: (newFile) => {
             set((state) => {
-                return { mulFiles: [...state.mulFiles, newFile] };
+                return { mulFiles: [...state.mulFiles, newFile].sort((a, b) => {
+                    return a.filename < b.filename ? -1 : 1;
+                }) };
             });
         },
     };
