@@ -323,7 +323,7 @@ export function parseMul(buffer: ArrayBuffer) {
                 xres,
                 yres,
                 zres,
-                new Date(year, month, day, hour, minute, second),
+                new Date(year, month - 1, day, hour, minute, second),
                 xsize,
                 ysize,
                 xoffset,
