@@ -7,9 +7,11 @@ import qr from "ndarray-householder-qr";
 import fill from "ndarray-fill";
 // @ts-ignore
 import concatCols from "ndarray-concat-cols";
+import { MulFile } from ".";
 
 export class MulImage {
     private isProcessed: boolean;
+    static qrResult: NdArray<Float32Array> | null = null;
 
     constructor(
         public imgNum: number,
@@ -115,11 +117,20 @@ export class MulImage {
         arrFlat.shape = [this.yres * this.xres];
         arrFlat.stride = [1];
 
-        const ones = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
+        const ones = ndarray(new Float32Array(this.yres * this.xres), [
+            this.yres,
+            this.xres,
+        ]);
         fill(ones, () => 1);
-        const xCoords = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
+        const xCoords = ndarray(new Float32Array(this.yres * this.xres), [
+            this.yres,
+            this.xres,
+        ]);
         fill(xCoords, (_: number, j: number) => j);
-        const yCoords = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
+        const yCoords = ndarray(new Float32Array(this.yres * this.xres), [
+            this.yres,
+            this.xres,
+        ]);
         fill(yCoords, (i: number, _: number) => i);
 
         // flatten arrays
@@ -154,7 +165,10 @@ export class MulImage {
         const third = arrFlat.get(2);
 
         // allocate matrix for the background
-        const correction = ndarray(new Float32Array(this.yres * this.xres), [this.yres, this.xres]);
+        const correction = ndarray(new Float32Array(this.yres * this.xres), [
+            this.yres,
+            this.xres,
+        ]);
         // calculate background
         ops.mulseq(ones, first);
         ops.mulseq(xCoords, second);
@@ -211,6 +225,7 @@ export function parseMul(buffer: ArrayBuffer) {
 
         let year = dv.getInt16(pos += 2, true);
         let month = dv.getInt16(pos += 2, true);
+        console.log(month)
         let day = dv.getInt16(pos += 2, true);
         let hour = dv.getInt16(pos += 2, true);
         let minute = dv.getInt16(pos += 2, true);
@@ -267,17 +282,11 @@ export function parseMul(buffer: ArrayBuffer) {
         let spare62 = dv.getInt16(pos += 2, true);
         let spare63 = dv.getInt16(pos += 2, true);
 
-        // let imgData = []
-        // for(let i = 0; i < yres; i++) {
-        //     let line = []
-        //     for(let j = 0; j < xres; j++) {
-        //         let dataPoint = dv.getInt16(pos += 2, true);
-        //         line.push(dataPoint);
-        //     }
-        //     imgData.push(line);
-        // }
-        let imgData = new Uint16Array(buffer, pos += 2, xres * yres);
-        pos += xres * yres * 2 - 2;
+        let imgData = new Float32Array(xres * yres);
+        for (let i = 0; i < xres * yres; i++) {
+            imgData[i] = dv.getInt16(pos += 2, true) * 0.1 / 1.36 * zscale /
+                2000;
+        }
 
         if (numPointscans > 0) {
             for (let i = 0; i < numPointscans; i++) {
@@ -344,7 +353,7 @@ export function parseMul(buffer: ArrayBuffer) {
                 unitnr,
                 version,
                 gain,
-                new Float32Array(imgData),
+                imgData,
             ),
         );
     }
