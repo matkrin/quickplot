@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 tests/__snapshots__/*
 *.snap
+
+wasm/target

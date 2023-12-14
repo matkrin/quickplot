@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import wasm from "vite-plugin-wasm";
 
 const manifestForPlugin: Partial<VitePWAOptions> = {
     registerType: "autoUpdate",
@@ -38,6 +39,9 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react(), VitePWA(manifestForPlugin), nodePolyfills()],
+    plugins: [react(), VitePWA(manifestForPlugin), nodePolyfills(), wasm()],
     base: "/quickplot/",
+    build: {
+        target: "esnext",
+    },
 });
