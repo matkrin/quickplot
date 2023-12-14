@@ -7,7 +7,7 @@ import qr from "ndarray-householder-qr";
 import fill from "ndarray-fill";
 // @ts-ignore
 import concatCols from "ndarray-concat-cols";
-import { MulFile } from ".";
+import { correct_plane_wasm } from "../../wasm/pkg";
 
 export class MulImage {
     private isProcessed: boolean;
@@ -56,7 +56,8 @@ export class MulImage {
         this.flipImgData();
 
         let start = performance.now();
-        this.correctPlane();
+        /* this.correctPlane(); */
+        this.correctPlaneWasm();
         console.log("plane", performance.now() - start);
 
         this.correctLines();
@@ -106,6 +107,10 @@ export class MulImage {
             newArr.set(line, len - i);
         }
         this.imgData = newArr;
+    }
+
+    correctPlaneWasm() {
+        this.imgData = correct_plane_wasm(this.imgData as Float32Array, this.xres, this.yres);
     }
 
     correctPlane() {
