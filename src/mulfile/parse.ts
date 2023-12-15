@@ -54,12 +54,7 @@ export class MulImage {
         if (this.isProcessed) return;
 
         this.flipImgData();
-
-        let start = performance.now();
-        /* this.correctPlane(); */
         this.correctPlaneWasm();
-        console.log("plane", performance.now() - start);
-
         this.correctLines();
         this.imgDataToUint8Clamped("rocket");
 
@@ -230,7 +225,6 @@ export function parseMul(buffer: ArrayBuffer) {
 
         let year = dv.getInt16(pos += 2, true);
         let month = dv.getInt16(pos += 2, true);
-        console.log(month)
         let day = dv.getInt16(pos += 2, true);
         let hour = dv.getInt16(pos += 2, true);
         let minute = dv.getInt16(pos += 2, true);
