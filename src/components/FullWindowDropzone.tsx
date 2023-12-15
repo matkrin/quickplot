@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { LogFile } from "../logfile";
 import { MulFile } from "../mulfile";
 import { useStore } from "../stores/store";
 import { AesStaib } from "../vamas";
@@ -12,6 +13,7 @@ export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
     const addAesFile = useStore((state) => state.addAesFile);
     const addAesFiles = useStore((state) => state.addAesFiles);
     const addMulFile = useStore((state) => state.addMulFile);
+    const addLogFile = useStore((state) => state.addLogFile);
 
     const onDrop = useCallback(async (acceptedFiles: Array<File>) => {
         if (acceptedFiles.every((f) => f.name.endsWith(".vms"))) {
@@ -35,6 +37,11 @@ export default function FullWindowDropzone(props: DropzoneProps): JSX.Element {
                     const mulfile = new MulFile(fileContent);
                     mulfile.setFilename(f.name);
                     addMulFile(mulfile);
+                } else if (f.name.endsWith(".csv")) {
+                    const fileContent = await f.text();
+                    const logFile = new LogFile(fileContent);
+                    logFile.setFilename(f.name);
+                    addLogFile(logFile);
                 }
             });
         }
