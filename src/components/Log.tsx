@@ -8,7 +8,9 @@ export default function Log(): JSX.Element {
 
     return (
         <>
-            {logFiles.map((logFile) => <LogFilePlot logFile={logFile} />)}
+            {logFiles.map((logFile) => (
+                <LogFilePlot key={logFile.filename} logFile={logFile} />
+            ))}
         </>
     );
 }
@@ -96,7 +98,7 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
                 size: 14,
             },
         },
-        yaxis: { ...yaxisLayout, title: "p<sub>STM Chamber</sub>"},
+        yaxis: { ...yaxisLayout, title: "p<sub>STM Chamber</sub>" },
         yaxis2: { ...yaxisLayout, title: "p<sub>Prep Chamber</sub>" },
         yaxis3: { ...yaxisLayout, title: "p<sub>STM Inlet</sub>" },
         yaxis4: { ...yaxisLayout, title: "T<sub>Sample</sub>" },

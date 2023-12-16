@@ -4,12 +4,19 @@ import { useStore } from "../../stores/store";
 
 export default function Mul(): JSX.Element {
     const mulFiles = useStore((state) => state.mulFiles);
+    const logFiles = useStore(state => state.logFiles);
+
+    if (logFiles.length > 0) {
+        for (let logfile of logFiles) {
+            mulFiles.forEach(mf => mf.extractLogFile(logfile));
+        }
+    }
 
     return (
         <div>
             {mulFiles.map((mulfile) => {
                 return (
-                    <>
+                    <div key={mulfile.filename}>
                         <h2 key={mulfile.filename}>{mulfile.filename}</h2>
                         <div style={{ display: "flex", flexWrap: "wrap" }}>
                             {mulfile.imgs.map((img) => (
@@ -19,7 +26,7 @@ export default function Mul(): JSX.Element {
                                 />
                             ))}
                         </div>
-                    </>
+                    </div>
                 );
             })}
         </div>
@@ -40,6 +47,11 @@ function StmImage(props: { mulImage: MulImage }): JSX.Element {
             </span>
             <span>{mulImage.title}</span>
             <span>{mulImage.datetime.toLocaleString()}</span>
+            <span>{mulImage.logFileData?.datetime.toLocaleString()}</span>
+            <span>{mulImage.logFileData?.pStmChamber}</span>
+            <span>{mulImage.logFileData?.pPrepChamber}</span>
+            <span>{mulImage.logFileData?.pStmInlet}</span>
+            <span>{mulImage.logFileData?.tempSample}</span>
         </div>
     );
 }
