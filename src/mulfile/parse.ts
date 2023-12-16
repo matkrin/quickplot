@@ -9,8 +9,17 @@ import fill from "ndarray-fill";
 import concatCols from "ndarray-concat-cols";
 import { correct_plane_wasm } from "../../wasm/pkg";
 
+type MulLogFileData = {
+    datetime: Date;
+    pStmChamber: number;
+    pPrepChamber: number;
+    pStmInlet: number;
+    tempSample: number;
+};
+
 export class MulImage {
     private isProcessed: boolean;
+    public logFileData: MulLogFileData | null = null;
     static qrResult: NdArray<Float32Array> | null = null;
 
     constructor(
@@ -105,7 +114,11 @@ export class MulImage {
     }
 
     correctPlaneWasm() {
-        this.imgData = correct_plane_wasm(this.imgData as Float32Array, this.xres, this.yres);
+        this.imgData = correct_plane_wasm(
+            this.imgData as Float32Array,
+            this.xres,
+            this.yres,
+        );
     }
 
     correctPlane() {
