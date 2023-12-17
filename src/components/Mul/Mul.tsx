@@ -14,11 +14,13 @@ export default function Mul(): JSX.Element {
     }
 
     return (
-        <div>
+        <div style={{ paddingLeft: "20px" }}>
             {mulFiles.map((mulfile) => {
                 return (
                     <div key={mulfile.filename}>
-                        <h2 key={mulfile.filename}>{mulfile.filename}</h2>
+                        <h2 key={mulfile.filename} id={mulfile.filename}>
+                            {mulfile.filename}
+                        </h2>
                         <div style={{ display: "flex", flexWrap: "wrap" }}>
                             {mulfile.imgs.map((img) => (
                                 <StmImageEntry
