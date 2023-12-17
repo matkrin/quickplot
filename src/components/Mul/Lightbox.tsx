@@ -39,6 +39,7 @@ export default function Lightbox(): JSX.Element {
                 height: "100vh",
                 backgroundColor: "rgba(0, 0, 0, 0.80)",
                 backdropFilter: "blur(20px)",
+                zIndex: 1,
             }}
         >
             <button className="lightbox-btn-close" onClick={closeLightbox}>
