@@ -115,7 +115,7 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
     };
 
     return (
-        <>
+        <div id={logFile.filename}>
             <Plot
                 style={{
                     width: "90vw",
@@ -128,6 +128,6 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
                 useResizeHandler={true}
                 config={config}
             />
-        </>
+        </div>
     );
 }

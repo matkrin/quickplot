@@ -8,6 +8,64 @@
 /*     width: 100vw; */
 /* } */
 
+.menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 99;
+    padding: 5px;
+}
+
+.github-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 10px;
+    left: 60px;
+    padding: 5px;
+    color: white;
+    background-color:transparent; 
+    border: none
+}
+
+.github-btn > a {
+    color: white;
+}
+
+.sidebar {
+    height: 100%;
+    width: width;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: scroll;
+    transition: 0.2s;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.80);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid grey;
+    z-index: 2;
+}
+
+.sidebar-content {
+    display: block;
+    text-align: left;
+    padding: 70px 0 0 10px;
+}
+
+.sidebar-li {
+    text-decoration: underline;
+}
+
+.sidebar-li:hover {
+    cursor: pointer;
+    color: #646cff;
+}
+
 .stm-image {
     font-size: 14px;
     display: flex;
@@ -30,6 +88,7 @@
 }
 
 .lightbox-btn-prev-next:hover {
+    color: #646cff;
     background-color: rgba(120, 120, 120, 0.2);
 }
 

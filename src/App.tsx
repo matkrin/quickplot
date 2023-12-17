@@ -5,6 +5,7 @@ import Aes from "./components/Aes/Aes";
 import Mul from "./components/Mul/Mul";
 import Log from "./components/Log";
 import Lightbox from "./components/Mul/Lightbox";
+import Sidebar from "./components/Sidebar";
 
 function App() {
     const aesFiles = useStore((state) => state.aesFiles);
@@ -14,6 +15,7 @@ function App() {
     return (
         <>
             <Lightbox />
+            <Sidebar />
             <FullWindowDropzone>
                 <div className="App">
                     {aesFiles.length > 0 && <Aes />}
