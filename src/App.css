@@ -9,6 +9,7 @@
 /* } */
 
 .stm-image {
+    font-size: 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,4 +18,34 @@
 .stm-image:hover {
     color: white;
     background-color: rgba(20, 75, 211, 1);
+    cursor: pointer;
+}
+
+.lightbox-btn-prev-next {
+    font-size: 50px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    background-color: transparent;
+}
+
+.lightbox-btn-prev-next:hover {
+    background-color: rgba(120, 120, 120, 0.2);
+}
+
+.lightbox-btn-close {
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 50px;
+    padding: 0 0 50px 50px;
+    margin: 0px;
+    color: white;
+    background-color: transparent;
+    border: none;
+}
+
+.lightbox-btn-close:hover {
+    color: rgb(253, 110, 110);
 }
