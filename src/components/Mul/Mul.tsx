@@ -1,14 +1,15 @@
-import { useEffect, useRef } from "react";
 import { MulImage } from "../../mulfile/parse";
 import { useStore } from "../../stores/store";
+import StmImage from "./StmImageCanvas";
 
 export default function Mul(): JSX.Element {
     const mulFiles = useStore((state) => state.mulFiles);
-    const logFiles = useStore(state => state.logFiles);
+    const logFiles = useStore((state) => state.logFiles);
+    const openLightbox = useStore((state) => state.openLightbox);
 
     if (logFiles.length > 0) {
         for (let logfile of logFiles) {
-            mulFiles.forEach(mf => mf.extractLogFile(logfile));
+            mulFiles.forEach((mf) => mf.extractLogFile(logfile));
         }
     }
 
@@ -20,9 +21,10 @@ export default function Mul(): JSX.Element {
                         <h2 key={mulfile.filename}>{mulfile.filename}</h2>
                         <div style={{ display: "flex", flexWrap: "wrap" }}>
                             {mulfile.imgs.map((img) => (
-                                <StmImage
+                                <StmImageEntry
                                     key={img.imgID}
                                     mulImage={img}
+                                    onClick={() => openLightbox(img)}
                                 />
                             ))}
                         </div>
@@ -33,54 +35,26 @@ export default function Mul(): JSX.Element {
     );
 }
 
-function StmImage(props: { mulImage: MulImage }): JSX.Element {
+type StmImageEntryProps = {
+    mulImage: MulImage;
+    onClick: () => void;
+};
+
+function StmImageEntry(props: StmImageEntryProps): JSX.Element {
     const { mulImage } = props;
     const filename = mulImage.imgID.split("_").slice(0, -1).join("_");
     return (
-        <div className="stm-image">
-            <StmImageCanvas
+        <div className="stm-image" onClick={props.onClick}>
+            <StmImage
                 mulImage={mulImage}
+                width={`${mulImage.xres / 2}px`}
+                height={`${mulImage.yres / 2}px`}
             />
             <span>
-                {mulImage.imgID.split("_").slice(0, -1).join("_")}{" "}
-                <strong>{`#${mulImage.imgNum}`}</strong>
+                {filename}
+                <strong>{` #${mulImage.imgNum}`}</strong>
             </span>
             <span>{mulImage.title}</span>
-            <span>{mulImage.datetime.toLocaleString()}</span>
-            <span>{mulImage.logFileData?.datetime.toLocaleString()}</span>
-            <span>{mulImage.logFileData?.pStmChamber}</span>
-            <span>{mulImage.logFileData?.pPrepChamber}</span>
-            <span>{mulImage.logFileData?.pStmInlet}</span>
-            <span>{mulImage.logFileData?.tempSample}</span>
         </div>
     );
-}
-
-function StmImageCanvas(props: { mulImage: MulImage }) {
-    const mulImage = props.mulImage;
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    useEffect(() => {
-        mulImage.process();
-
-        const imageData = new ImageData(
-            mulImage.imgData as Uint8ClampedArray,
-            mulImage.xres,
-            mulImage.yres,
-        );
-
-        if (canvasRef.current == null) return;
-        const canvas = canvasRef.current;
-        canvas.style.width = `${mulImage.xres / 2}px`;
-        canvas.style.height = `${mulImage.yres / 2}px`;
-        canvas.style.padding = "5px";
-
-        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-        ctx.canvas.width = mulImage.xres;
-        ctx.canvas.height = mulImage.yres;
-
-        ctx.putImageData(imageData, 0, 0);
-    }, []);
-
-    return <canvas ref={canvasRef} />;
 }
