@@ -35,17 +35,31 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
         yaxis: "y3",
         name: "p<sub>STM Inlet</sub>",
     };
+    const pBaratronInTrace = {
+        x: logFile.datetimes,
+        y: logFile.pBaratronIn,
+        yaxis: "y4",
+        name: "p<sub>STM Baratron In</sub>",
+    };
+    const pBaratronOutTrace = {
+        x: logFile.datetimes,
+        y: logFile.pBaratronOut,
+        yaxis: "y5",
+        name: "p<sub>STM Baratron Out</sub>",
+    };
     const tempSampleTrace = {
         x: logFile.datetimes,
         y: logFile.tempSample,
-        yaxis: "y4",
-        name: "T<sub>sample<sub>",
+        yaxis: "y6",
+        name: "T<sub>Sample<sub>",
     };
 
     const data = [
         pStmChamberTrace,
         pPrepChamberTrace,
         pStmInletTrace,
+        pBaratronInTrace,
+        pBaratronOutTrace,
         tempSampleTrace,
     ];
 
@@ -73,7 +87,7 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
 
     const layout: Partial<Layout> = {
         grid: {
-            rows: 4,
+            rows: 6,
             columns: 1,
             ygap: 0.1,
         },
@@ -101,7 +115,9 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
         yaxis: { ...yaxisLayout, title: "p<sub>STM Chamber</sub>" },
         yaxis2: { ...yaxisLayout, title: "p<sub>Prep Chamber</sub>" },
         yaxis3: { ...yaxisLayout, title: "p<sub>STM Inlet</sub>" },
-        yaxis4: { ...yaxisLayout, title: "T<sub>Sample</sub>" },
+        yaxis4: { ...yaxisLayout, title: "p<sub>Bartron In</sub>" },
+        yaxis5: { ...yaxisLayout, title: "p<sub>Bartron Out</sub>" },
+        yaxis6: { ...yaxisLayout, title: "T<sub>Sample</sub>" },
         title: {
             text: `${logFile.filename}`,
             font: {

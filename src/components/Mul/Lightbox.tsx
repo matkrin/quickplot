@@ -158,6 +158,18 @@ function StmImageMetaTable(props: { mulImage: MulImage }): JSX.Element {
                         </tr>
                         <tr>
                             <th>
+                                p<sub>Baratron In</sub>
+                            </th>
+                            <td>{mulImage.logFileData?.pBaratronIn} mbar</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                p<sub>Baratron Out</sub>
+                            </th>
+                            <td>{mulImage.logFileData?.pBaratronOut} mbar</td>
+                        </tr>
+                        <tr>
+                            <th>
                                 T<sub>sample</sub>
                             </th>
                             <td>{mulImage.logFileData?.tempSample} K</td>
