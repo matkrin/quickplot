@@ -174,6 +174,15 @@ function StmImageMetaTable(props: { mulImage: MulImage }): JSX.Element {
                             </th>
                             <td>{mulImage.logFileData?.tempSample} K</td>
                         </tr>
+                        <tr>
+                            <th>
+                                Datetime<sub>log</sub>
+                            </th>
+                            <td>
+                                {mulImage.logFileData?.datetime
+                                    .toLocaleString()}
+                            </td>
+                        </tr>
                     </>
                 )}
             </tbody>
