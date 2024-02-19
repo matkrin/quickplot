@@ -38,6 +38,8 @@ export class MulFile {
                     pPrepChamber: logfile.pPrepChamber[minIdx],
                     pStmInlet: logfile.pStmInlet[minIdx],
                     tempSample: logfile.tempSample[minIdx],
+                    pBaratronIn: logfile.pBaratronIn[minIdx],
+                    pBaratronOut: logfile.pBaratronOut[minIdx],
                 };
             }
         });

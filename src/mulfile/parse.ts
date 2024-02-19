@@ -15,6 +15,8 @@ type MulLogFileData = {
     pPrepChamber: number;
     pStmInlet: number;
     tempSample: number;
+    pBaratronIn: number;
+    pBaratronOut: number;
 };
 
 export class MulImage {
