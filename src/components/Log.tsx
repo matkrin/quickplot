@@ -115,8 +115,8 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
         yaxis: { ...yaxisLayout, title: "p<sub>STM Chamber</sub>" },
         yaxis2: { ...yaxisLayout, title: "p<sub>Prep Chamber</sub>" },
         yaxis3: { ...yaxisLayout, title: "p<sub>STM Inlet</sub>" },
-        yaxis4: { ...yaxisLayout, title: "p<sub>Bartron In</sub>" },
-        yaxis5: { ...yaxisLayout, title: "p<sub>Bartron Out</sub>" },
+        yaxis4: { ...yaxisLayout, title: "p<sub>Baratron In</sub>" },
+        yaxis5: { ...yaxisLayout, title: "p<sub>Baratron Out</sub>" },
         yaxis6: { ...yaxisLayout, title: "T<sub>Sample</sub>" },
         title: {
             text: `${logFile.filename}`,
