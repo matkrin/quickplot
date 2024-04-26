@@ -107,7 +107,7 @@ function StmImageMetaTable(props: { mulImage: MulImage }): JSX.Element {
                 <tr>
                     <th>Scan Size</th>
                     <td>
-                        {mulImage.xsize} &times; {mulImage.ysize} nm<sup>2</sup>
+                        {mulImage.xsize * 0.1} &times; {mulImage.ysize * 0.1} nm<sup>2</sup>
                     </td>
                 </tr>
                 <tr>
