@@ -1,8 +1,8 @@
 # quickplot
 
-quickplot is a website that allows plotting of scientific data by simply draging
-and dropping files or folders into the browser window. Additionally, It can be
-installed locally as a PWA.
+quickplot is a [web app](https://matkrin.github.io/quickplot) that allows
+plotting of scientific data by simply draging and dropping files or folders
+into the browser window. Additionally, It can be installed locally as a PWA.
 
 ## Supported methods
 
