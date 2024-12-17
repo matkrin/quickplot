@@ -11,7 +11,8 @@
         "test": "vitest",
         "coverage": "vitest run --coverage",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist"
+        "deploy": "gh-pages -d dist",
+        "build-wasm": "cd wasm && wasm-pack build"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
@@ -24,6 +25,7 @@
         "ndarray-concat-cols": "^1.0.0",
         "ndarray-fill": "^1.0.2",
         "ndarray-householder-qr": "^2.3.3",
+        "ndarray-ops": "^1.2.2",
         "papaparse": "^5.4.1",
         "plotly.js": "^2.21.0",
         "react": "^18.2.0",
