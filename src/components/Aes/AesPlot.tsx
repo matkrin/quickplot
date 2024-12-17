@@ -12,6 +12,7 @@ export default function AesPlot() {
     const [xRange, setXRange] = useStore((
         state,
     ) => [state.xRange, state.setXRange]);
+    console.log(xRange)
 
     const isOffset = useStore((state) => state.isOffset);
     const offsetRange = useStore((state) => state.offsetRange);
@@ -89,7 +90,7 @@ export default function AesPlot() {
                 icon: yAutoscaleIcon,
                 click: (gd: PlotlyHTMLElement) => {
                     // @ts-ignore: not included in interface
-                    const selectedXRange = gd.layout.xaxis.range;
+                    const selectedXRange: Array<number> = gd.layout.xaxis.range;
                     setXRange(selectedXRange);
                     setYRange(selectedXRange);
                 },
