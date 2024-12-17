@@ -2,6 +2,7 @@ import AesPlot from "./AesPlot";
 import Normalization from "./Normalization";
 import Smoothing from "./Smoothing";
 import AesTable from "./AesTable";
+import Offset from "./Offset";
 
 
 export default function Aes(): JSX.Element {
@@ -22,6 +23,7 @@ export default function Aes(): JSX.Element {
                         justifyContent: "space-between",
                     }}
                 >
+                    <Offset />
                     <Normalization />
                     <Smoothing />
                 </div>

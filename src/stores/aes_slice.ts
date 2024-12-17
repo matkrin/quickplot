@@ -10,6 +10,8 @@ export type AesSlice = {
     normRange: [number, number];
     isSmoothing: boolean;
     savitzkyGolayOpts: SavitzkyGolayOpts;
+    isOffset: boolean,
+    offsetRange: [number, number],
     setAesFiles: (newFiles: Array<AesStaib>) => void;
     addAesFile: (newFile: AesStaib) => void;
     addAesFiles: (newFiles: Array<AesStaib>) => void;
@@ -19,6 +21,8 @@ export type AesSlice = {
     setNormRange: (newNormRange: [number, number]) => void;
     setSmoothing: (newSmoothing: boolean) => void;
     setSavitzkyGolayOpts: (newOpts: SavitzkyGolayOpts) => void;
+    setIsOffset: (newIsOffset: boolean) => void;
+    setOffsetRange: (newOffsetRange: [number, number]) => void;
 };
 
 type SavitzkyGolayOpts = {
@@ -35,6 +39,8 @@ export const createAesSlice: StateCreator<AesSlice> = (set) => {
         normRange: [0, 0],
         isSmoothing: false,
         savitzkyGolayOpts: { window: 5, derivative: 1, polynomial: 2 },
+        isOffset: false,
+        offsetRange: [0, 0],
 
         setAesFiles: (newFiles) => {
             set(() => {
@@ -111,6 +117,18 @@ export const createAesSlice: StateCreator<AesSlice> = (set) => {
                 return { savitzkyGolayOpts: newSavGolOpts };
             });
         },
+
+        setIsOffset: (newIsOffset: boolean) => {
+            set(() => {
+                return { isOffset: newIsOffset };
+            });
+        },
+
+        setOffsetRange: (newOffsetRange: [number, number]) => {
+            set(() => {
+                return { offsetRange: newOffsetRange };
+            });
+        },
     };
 };
 
@@ -154,6 +172,29 @@ export function normalizeForRange(
         const f = meanFirst / mean;
         const normY = i.yData.map((n) => n * f);
         return { xData: i.xData, yData: normY };
+    });
+}
+
+export function offsetForRange(
+    plotData: PlotData,
+    offsetRange: [number, number]
+): PlotData {
+    const meanFirst = yMeanForXRange(
+        plotData[0].xData,
+        plotData[0].yData,
+        offsetRange[0],
+        offsetRange[1],
+    );
+    return plotData.map((i) => {
+        const mean = yMeanForXRange(
+            i.xData,
+            i.yData,
+            offsetRange[0],
+            offsetRange[1],
+        );
+        const delta = meanFirst - mean;
+        const offsetY = i.yData.map((n) => n + delta);
+        return { xData: i.xData, yData: offsetY };
     });
 }
 

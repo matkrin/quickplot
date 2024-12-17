@@ -1,6 +1,6 @@
 import { Config, Layout, PlotlyHTMLElement } from "plotly.js";
 import Plot from "react-plotly.js";
-import { aesSavGol, normalizeForRange } from "../../stores/aes_slice";
+import { aesSavGol, normalizeForRange, offsetForRange } from "../../stores/aes_slice";
 import { useStore } from "../../stores/store";
 import { yAutoscaleIcon } from "./y_autoscale_icon";
 
@@ -12,6 +12,10 @@ export default function AesPlot() {
     const [xRange, setXRange] = useStore((
         state,
     ) => [state.xRange, state.setXRange]);
+
+    const isOffset = useStore((state) => state.isOffset);
+    const offsetRange = useStore((state) => state.offsetRange);
+
     const isNormalize = useStore((state) => state.isNormalize);
     const normRange = useStore((state) => state.normRange);
 
@@ -94,7 +98,8 @@ export default function AesPlot() {
     };
 
     let plotData = aesFiles.map((af) => ({ xData: af.xData, yData: af.yData }));
-    plotData = isNormalize ? normalizeForRange(plotData, normRange) : aesFiles;
+    plotData = isOffset ? offsetForRange(plotData, offsetRange) : plotData;
+    plotData = isNormalize ? normalizeForRange(plotData, normRange) : plotData;
     try {
         plotData = isSmoothing
             ? aesSavGol(plotData, savitzkyGolayOpts)
