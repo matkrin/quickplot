@@ -54,6 +54,13 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
         name: "T<sub>Sample<sub>",
     };
 
+    const iStmFilamentTrace = {
+        x: logFile.datetimes,
+        y: logFile.iStmFilament,
+        yaxis: "y7",
+        name: "I<sub>STM Filament<sub>",
+    };
+
     const data = [
         pStmChamberTrace,
         pPrepChamberTrace,
@@ -61,6 +68,7 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
         pBaratronInTrace,
         pBaratronOutTrace,
         tempSampleTrace,
+        iStmFilamentTrace,
     ];
 
     const yaxisLayout: Partial<LayoutAxis> = {
@@ -87,7 +95,7 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
 
     const layout: Partial<Layout> = {
         grid: {
-            rows: 6,
+            rows: 7,
             columns: 1,
             ygap: 0.1,
         },
@@ -118,6 +126,7 @@ function LogFilePlot(props: { logFile: LogFile }): JSX.Element {
         yaxis4: { ...yaxisLayout, title: "p<sub>Baratron In</sub>" },
         yaxis5: { ...yaxisLayout, title: "p<sub>Baratron Out</sub>" },
         yaxis6: { ...yaxisLayout, title: "T<sub>Sample</sub>" },
+        yaxis7: { ...yaxisLayout, title: "I<sub>STM Filament</sub>" },
         title: {
             text: `${logFile.filename}`,
             font: {

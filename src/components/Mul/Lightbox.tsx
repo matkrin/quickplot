@@ -176,6 +176,12 @@ function StmImageMetaTable(props: { mulImage: MulImage }): JSX.Element {
                         </tr>
                         <tr>
                             <th>
+                                I<sub>STM Filament</sub>
+                            </th>
+                            <td>{mulImage.logFileData?.iStmFilament} K</td>
+                        </tr>
+                        <tr>
+                            <th>
                                 Datetime<sub>log</sub>
                             </th>
                             <td>

@@ -40,6 +40,7 @@ export class MulFile {
                     tempSample: logfile.tempSample[minIdx],
                     pBaratronIn: logfile.pBaratronIn[minIdx],
                     pBaratronOut: logfile.pBaratronOut[minIdx],
+                    iStmFilament: logfile.iStmFilament[minIdx],
                 };
             }
         });

@@ -8,6 +8,7 @@ const P_STM_INLET = "p STM inlet [mbar] (p/T via Labview)";
 const T_SAMPLE = "T STM sample [K] (p/T via Labview)";
 const P_BARATRON_IN = "p baratron inlet [mbar] (p/T via Labview)"
 const P_BARATRON_OUT = "p baratron outlet [mbar] (p/T via Labview)"
+const I_STM_FILAMENT = "I STM heater [A] (p/T via Labview)"
 
 //"Pressure [mbar] (JEVAmet VCU - Analysis SPM)";"p prep chamber [mbar] (p/T via Labview)";"p STM inlet [mbar] (p/T via Labview)";"T STM sample [K] (p/T via Labview)"
 export class LogFile {
@@ -18,6 +19,7 @@ export class LogFile {
     tempSample: Array<number>;
     pBaratronIn: Array<number>;
     pBaratronOut: Array<number>;
+    iStmFilament: Array<number>;
     filename: string;
 
     constructor(fileContent: string) {
@@ -28,6 +30,7 @@ export class LogFile {
         this.tempSample = [];
         this.pBaratronIn = [];
         this.pBaratronOut = [];
+        this.iStmFilament = [];
         this.filename = "";
         this.parseCsv(fileContent);
     }
@@ -84,6 +87,12 @@ export class LogFile {
                 this.pBaratronOut[i] = Number.parseFloat(data[i][P_BARATRON_OUT]);
             } catch (err) {
                 console.error(`No entry for "${P_BARATRON_OUT}" found`, err);
+            }
+
+            try {
+                this.iStmFilament[i] = Number.parseFloat(data[i][I_STM_FILAMENT]);
+            } catch (err) {
+                console.error(`No entry for "${I_STM_FILAMENT}" found`, err);
             }
         }
     }
