@@ -102,7 +102,7 @@ export default function RangeSlider({label, setChecked, range, setRange}: RangeS
                     style={{ width: "60px", marginRight: "15px" }}
                 />
                 <Slider
-                    style={{ width: "15vw" }}
+                    style={{ width: "12vw" }}
                     min={xMin}
                     max={xMax}
                     value={range}

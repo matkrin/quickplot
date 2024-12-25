@@ -31,6 +31,7 @@ export default function AesPlot() {
             t: 30,
             b: 70,
         },
+        uirevision: "true",
         xaxis: {
             range: xRange,
             title: {
